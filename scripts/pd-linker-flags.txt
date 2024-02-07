@@ -6,6 +6,7 @@
 -Wl,-U,_atom_getint
 -Wl,-U,_atom_string
 -Wl,-U,_class_new
+-Wl,-U,_class_new64
 -Wl,-U,_class_addmethod
 -Wl,-U,_class_getname
 -Wl,-U,_class_sethelpsymbol

@@ -214,7 +214,7 @@ public:
     }
   }
 
-  float sampleRate() { return sys_getsr(); }
+  t_float sampleRate() { return sys_getsr(); }
 
   void makeLatencyOutlet(t_object* pdObject){
     if(mSigIns.size() || mSigOuts.size())
@@ -337,7 +337,7 @@ struct NonRealTime
     clock_delay(mProgressClock, 20); // FIX - set at 20ms for now...
   }
 
-  void setSampleRate(float sr)
+  void setSampleRate(t_float sr)
   {
     auto& wrapper = static_cast<Wrapper&>(*this);
     mSamplerate = sr > 0 ? sr : mSamplerate;
@@ -349,7 +349,7 @@ struct NonRealTime
             &wrapper);
   }
 
-  float sampleRate() { return mSamplerate <= 0 ? sys_getsr() : mSamplerate; }
+  t_float sampleRate() { return mSamplerate <= 0 ? sys_getsr() : mSamplerate; }
 
 
   void setupAudio(t_object*, index, index) {}
@@ -373,7 +373,7 @@ private:
   t_clock* mProgressClock;
   bool     mSynchronous{true};
   bool     mQueueEnabled{false};
-  float    mSamplerate{-1};
+  t_float  mSamplerate{-1};
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -485,7 +485,7 @@ class FluidPDWrapper : public impl::FluidPDBase<FluidPDWrapper<Client>,
         index count = std::min<index>(x->mListSize,ac); 
         for(index j = 0; j < count; ++j)
         {
-          SETFLOAT(x->mOutputListAtoms.data() + j,static_cast<float>(x->mOutputListData[i][j]));
+          SETFLOAT(x->mOutputListAtoms.data() + j,static_cast<t_float>(x->mOutputListData[i][j]));
         }
         outlet_list(x->mDataOutlets[asUnsigned(i)],
                     gensym("list"), static_cast<int>(x->mListSize), x->mOutputListAtoms.data());
@@ -619,7 +619,7 @@ class FluidPDWrapper : public impl::FluidPDBase<FluidPDWrapper<Client>,
       a->a_w.w_symbol = s;
     }
 
-    static void atom_setfloat(t_atom* atom, float v)
+    static void atom_setfloat(t_atom* atom, t_float v)
     {
       (atom)->a_type = A_FLOAT;
       (atom)->a_w.w_float = v;
@@ -696,7 +696,7 @@ class FluidPDWrapper : public impl::FluidPDBase<FluidPDWrapper<Client>,
     static std::enable_if_t<std::is_floating_point<T>::value> toAtom(t_atom* a,
                                                                      T       v)
     {
-      atom_setfloat(a, static_cast<float>(v));
+      atom_setfloat(a, static_cast<t_float>(v));
     }
 
     static auto toAtom(t_atom* a, BufferT::type v)
@@ -732,7 +732,7 @@ class FluidPDWrapper : public impl::FluidPDBase<FluidPDWrapper<Client>,
     static std::enable_if_t<std::is_floating_point<T>::value>
     toAtom(t_atom* a, FluidTensor<T, 1> v)
     {
-      for (auto& x : v) { atom_setfloat(a++, static_cast<float>(x)); }
+      for (auto& x : v) { atom_setfloat(a++, static_cast<t_float>(x)); }
     }
 
     template <typename T>
@@ -1309,7 +1309,7 @@ public:
 
   void progress(double progress)
   {
-    outlet_float(mDumpOutlet, static_cast<float>(progress));
+    outlet_float(mDumpOutlet, static_cast<t_float>(progress));
   }
 
 
@@ -2001,7 +2001,7 @@ struct InputTypeWrapper
 template <>
 struct InputTypeWrapper<std::false_type>
 {
-  using type = float;
+  using type = t_float;
 };
 
 template <class Client>
