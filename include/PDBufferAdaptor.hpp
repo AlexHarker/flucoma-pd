@@ -201,55 +201,55 @@ public:
     releaseLock();
   }
 
-  FluidTensorView<float, 1> samps(index channel) override
+  FluidTensorView<t_float, 1> samps(index channel) override
   {
-    float* samples = (float*) getArrayData(channel);
+    t_float* samples = (t_float*) getArrayData(channel);
 
-    FluidTensorView<float, 2> v{samples, 0, numFrames(),
-                                sizeof(t_word) / sizeof(float)};
+    FluidTensorView<t_float, 2> v{samples, 0, numFrames(),
+                                sizeof(t_word) / sizeof(t_float)};
 
     return v.col(0);
   }
 
-  FluidTensorView<float, 1> samps(index offset, index nframes,
+  FluidTensorView<t_float, 1> samps(index offset, index nframes,
                                   index chanoffset) override
   {
-    float*                    samples = (float*) getArrayData(chanoffset);
-    FluidTensorView<float, 2> v{samples, 0, numFrames(),
-                                sizeof(t_word) / sizeof(float)};
+    t_float*                    samples = (t_float*) getArrayData(chanoffset);
+    FluidTensorView<t_float, 2> v{samples, 0, numFrames(),
+                                sizeof(t_word) / sizeof(t_float)};
 
     return v(Slice(offset, nframes), Slice(0, 1)).col(0);
   }
 
-  FluidTensorView<const float, 1> samps(index channel) const override
+  FluidTensorView<const t_float, 1> samps(index channel) const override
   {
-    float* samples = (float*) getArrayData(channel);
+    t_float* samples = (t_float*) getArrayData(channel);
 
-    FluidTensorView<const float, 2> v{samples, 0, numFrames(),
-                                      sizeof(t_word) / sizeof(float)};
+    FluidTensorView<const t_float, 2> v{samples, 0, numFrames(),
+                                      sizeof(t_word) / sizeof(t_float)};
 
     return v.col(0);
   }
 
-  FluidTensorView<const float, 1> samps(index offset, index nframes,
+  FluidTensorView<const t_float, 1> samps(index offset, index nframes,
                                         index chanoffset) const override
   {
-    float*                          samples = (float*) getArrayData(chanoffset);
-    FluidTensorView<const float, 2> v{samples, 0, numFrames(),
-                                      sizeof(t_word) / sizeof(float)};
+    t_float*                          samples = (t_float*) getArrayData(chanoffset);
+    FluidTensorView<const t_float, 2> v{samples, 0, numFrames(),
+                                      sizeof(t_word) / sizeof(t_float)};
 
     return v(Slice(offset, nframes), Slice(0, 1)).col(0);
   }
 
 
-  FluidTensorView<float, 2> allFrames() override
+  FluidTensorView<t_float, 2> allFrames() override
   {
     copyBufferIn();
     mMirrorDirty = true;
     return mMirrorBuffer.transpose();
   }
 
-  FluidTensorView<const float, 2> allFrames() const override
+  FluidTensorView<const t_float, 2> allFrames() const override
   {
     copyBufferIn();
     return mMirrorBuffer.transpose();
@@ -302,10 +302,10 @@ private:
     index nChans = getArrayCount();
     for (index i = 0; i < nChans; ++i)
     {
-      float* samples = (float*) getArrayData(i);
+      t_float* samples = (t_float*) getArrayData(i);
 
-      FluidTensorView<float, 2> v{samples, 0, nFrames,
-                                  sizeof(t_word) / sizeof(float)};
+      FluidTensorView<t_float, 2> v{samples, 0, nFrames,
+                                  sizeof(t_word) / sizeof(t_float)};
 
       v(Slice(0, nFrames), Slice(0, 1)).col(0) <<=
           mMirrorBuffer.col(i)(Slice(0, nFrames));
@@ -392,8 +392,8 @@ private:
   t_symbol* mName;
   impl::ArrayManager* mArrayManager; 
 
-  mutable FluidTensor<float, 2> mMirrorBuffer;
-  bool                          mMirrorDirty;
+  mutable FluidTensor<t_float, 2> mMirrorBuffer;
+  bool                            mMirrorDirty;
 
   mutable std::atomic<bool> mLock;
   mutable double            mSampleRate;
